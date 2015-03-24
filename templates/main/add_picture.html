@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Add picture{% endblock %}
+
+{% block left %}
+{% endblock %}
+
+{% block main %}
+	<h1>Add a Picture</h1>
+
+		<form id="picture_upload_form" method="post" action="{% url 'add_picture' %}" enctype="multipart/form-data">
+
+			{% csrf_token %}
+			{{ picture_upload_form.as_p }}
+
+			<input type="submit" name="submit" value="Upload!" />
+		</form>
+		<a href="{% url 'index' %}">Back to main</a>
+{% endblock %}

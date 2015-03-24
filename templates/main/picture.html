@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+	
+{% load static %}
+
+{% block title %}{{ picture.name }}{% endblock %}
+
+{% block left %}
+
+{% endblock %}
+
+{% block main %}
+
+	<a href="{{ picture.file_url.url  }}">
+		<img src="{{ picture.preview_url.url }}" alt="{{ picture.name }}" > 
+	</a>
+{% endblock %}
