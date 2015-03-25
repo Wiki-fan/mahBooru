@@ -1,0 +1,7 @@
+{% load main_templatetags %}
+<p>Tags:</p>
+<ul>
+	{% for i in tags %}
+		<a href="{% url 'index' %}?{% query_replace tags=i.name %}"><li> {{ i.name }}</li>
+	{% endfor %}
+</ul>

@@ -18,7 +18,7 @@ class MyImageField(models.ImageField):
 class Picture(models.Model):
 	ID = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=256)
-	src = models.CharField(max_length=256)
+	#src = models.CharField(max_length=256)
 	file_url = MyImageField(storage=picture_storage)
 	preview_url = MyImageField(storage=preview_storage)
 	thumbnail_url = MyImageField(storage=thumbnail_storage)

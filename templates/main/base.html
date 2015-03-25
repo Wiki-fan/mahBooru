@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 {% load static %}
+{% load main_templatetags %}
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
@@ -14,6 +15,7 @@
 <body>
 	
 	<div id='header'>
+		
 		<h1 id='site_title'>mahBooru</h1>
 	
 		<div id='right'>
@@ -25,31 +27,30 @@
 				<a href="{% url 'user_login' %}">Login</a>
 			{% endif %}
 		</div>
+		
 	</div>
+	
 	<div id='page'>
+		
 		<div id='left'>
-			<form id="tag_search_form" method="GET" action="/">
-
-				{{ tag_search_form.as_p }}
-
-				<input type="submit" name="submit" value="search" />
-			</form>
+			{% show_tag_search %}
 			{% block left %}
 			{% endblock %}
 			<a href="{% url 'index' %}">Back to main</a>
 		</div>
+		
 		<div id='main'>
 			{% block main %}
 			{% endblock %}	
 		</div>
+		
 	</div>
+	
 	<div id='footer'>
 		Running mahBooru. <a href="{% url 'about' %}">About</a>
 		{% block footer %}
 		{% endblock %}
 	</div>
-
-	
 	
 </body>
 

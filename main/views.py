@@ -85,15 +85,14 @@ def add_picture(request):
 			print form.errors
 	else:
 		form = PictureUploadForm()
-	context_dict = {'picture_upload_form': form}
-	tag_search_form = TagSearchForm()
-	context_dict['tag_search_form'] = tag_search_form
+	context_dict = {'picture_upload_form':form}
+
 	return render(request, 'main/add_picture.html', context_dict)
 	
 def posts(request):
 	if request.method == 'GET':
-		tag_search_form = TagSearchForm()
-		context_dict = {'tag_search_form': tag_search_form, 'picture': Picture.objects.get(ID=request.GET['id'])}
+		context_dict = { 'picture': Picture.objects.get(ID=request.GET['id'])}
+		print Picture.objects.get(ID=request.GET['id']).tags.names()
 	
 	return render(request, 'main/picture.html', context_dict)
 
@@ -122,14 +121,11 @@ def user_register(request):
 		user_profile_form = UserProfileRegisterForm()
 		
 	context_dict = {'user_form': user_form, 'user_profile_form': user_profile_form, 'registered': registered}
-	tag_search_form = TagSearchForm()
-	context_dict['tag_search_form'] = tag_search_form
 	
 	return render(request,'main/user_register.html', context_dict)
 
 def user_login(request):
-	tag_search_form = TagSearchForm()
-	context_dict = {'tag_search_form': tag_search_form}
+	context_dict = {}
 	if request.method == 'POST':
 		username = request.POST.get('username')
 		password = request.POST.get('password')
@@ -155,12 +151,16 @@ def user_logout(request):
     return HttpResponseRedirect('/')
     
 def index(request):
-	tag_search_form = TagSearchForm()
-	context_dict = {'tag_search_form': tag_search_form}
+	context_dict = {} 
 	if request.method == 'GET':
-		if not request.GET.get('search_query') is None:
-			query_list = [i for i in request.GET['search_query'].split(' ')]
-			picture_list = Picture.objects.filter(tags__name__in=query_list).distinct()
+		if not request.GET.get('tags') is None:
+			#print request.GET.get('tags')
+			query_list = [i for i in request.GET['tags'].split(' ')] 
+			#print query_list
+			picture_list = Picture.objects.all()
+			for i in query_list:
+				picture_list = picture_list.filter(tags__name__contains=i).distinct()
+			#print picture_list
 		else:
 			picture_list = Picture.objects.all()
 		context_dict['pictures'] = picture_list
@@ -169,7 +169,6 @@ def index(request):
 	return response
 
 def about(request):
-	tag_search_form = TagSearchForm()
-	context_dict = {'tag_search_form': tag_search_form}
+	context_dict = {}
 	return render(request, 'main/about.html', context_dict)
 		

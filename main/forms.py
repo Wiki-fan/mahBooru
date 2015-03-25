@@ -27,6 +27,6 @@ class UserProfileRegisterForm(forms.ModelForm):
 		fields = ('description', )
 		
 class TagSearchForm(forms.Form):
-	search_query = forms.CharField(label='Search')
+	tags = forms.CharField(label='Search')
 	
 	

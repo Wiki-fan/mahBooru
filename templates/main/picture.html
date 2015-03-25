@@ -1,11 +1,17 @@
 {% extends 'main/base.html' %}
 	
 {% load static %}
+{% load main_templatetags %}
 
 {% block title %}{{ picture.name }}{% endblock %}
 
 {% block left %}
-
+	<p>Tags:</p>
+	<ul>
+		{% for i in picture.tags.names %}
+			<a href="{% url 'index' %}?{% query_replace tags=i %}"><li>{{ i }}</li></a>
+		{% endfor %}
+	</ul>
 {% endblock %}
 
 {% block main %}
