@@ -1,6 +1,7 @@
 from django import forms
-from main.models import Picture, UserProfile
 from django.contrib.auth.models import User
+from .models import Picture, UserProfile
+
 
 class PictureUploadForm(forms.ModelForm):
 	name = forms.CharField(label="Enter picture name:")
@@ -19,12 +20,14 @@ class UserRegisterForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('username', 'email', 'password')
-	
+
+
 class UserProfileRegisterForm(forms.ModelForm):
 	description = forms.CharField(required=False)
 	class Meta:
 		model = UserProfile
 		fields = ('description', )
+
 		
 class TagSearchForm(forms.Form):
 	tags = forms.CharField(label='Search')

@@ -1,16 +1,17 @@
-from django.shortcuts import render
-from main.models import Picture, picture_storage, preview_storage, thumbnail_storage
-from django.contrib.auth.models import User
-from main.forms import PictureUploadForm, UserRegisterForm, UserProfileRegisterForm, TagSearchForm
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from PIL import Image
-from mahBooru.settings import *
 import os
-from django.core.files import File
 import StringIO
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.files import File
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from PIL import Image
+from .models import Picture, picture_storage, preview_storage, thumbnail_storage
+from .forms import PictureUploadForm, UserRegisterForm, UserProfileRegisterForm, TagSearchForm
+from mahBooru.settings import *
+
     
 def resize_image(im, dest_size):
 	image_w, image_h = im.size
@@ -87,14 +88,16 @@ def add_picture(request):
 		form = PictureUploadForm()
 	context_dict = {'picture_upload_form':form}
 
-	return render(request, 'main/add_picture.html', context_dict)
+	return render(request, 'booru/add_picture.html', context_dict)
+	
 	
 def posts(request):
 	if request.method == 'GET':
 		context_dict = { 'picture': Picture.objects.get(ID=request.GET['id'])}
 		print Picture.objects.get(ID=request.GET['id']).tags.names()
 	
-	return render(request, 'main/picture.html', context_dict)
+	return render(request, 'booru/picture.html', context_dict)
+
 
 def user_register(request):
 	registered = False
@@ -122,7 +125,8 @@ def user_register(request):
 		
 	context_dict = {'user_form': user_form, 'user_profile_form': user_profile_form, 'registered': registered}
 	
-	return render(request,'main/user_register.html', context_dict)
+	return render(request,'booru/user_register.html', context_dict)
+
 
 def user_login(request):
 	context_dict = {}
@@ -142,13 +146,15 @@ def user_login(request):
 			print "Invalid login details: {0}, {1}".format(username, password)
 			return HttpResponse("Invalid login details supplied.")
 	else:
-		return render(request, "main/user_login.html", context_dict)
+		return render(request, "booru/user_login.html", context_dict)
+
 
 @login_required
 def user_logout(request):
     logout(request)
     
     return HttpResponseRedirect('/')
+    
     
 def index(request):
 	context_dict = {} 
@@ -165,10 +171,11 @@ def index(request):
 			picture_list = Picture.objects.all()
 		context_dict['pictures'] = picture_list
 
-	response = render(request, 'main/index.html', context_dict)
+	response = render(request, 'booru/index.html', context_dict)
 	return response
+
 
 def about(request):
 	context_dict = {}
-	return render(request, 'main/about.html', context_dict)
+	return render(request, 'booru/about.html', context_dict)
 		

@@ -1,20 +1,20 @@
-{% extends 'main/base.html' %}
+{% extends 'booru/base.html' %}
 
 {% load static %}
-{% load main_templatetags %}
+{% load booru_templatetags %}
 
 {% block title %}Main{% endblock %}
 
 {% block left %}
 	{% show_all_tags %}
-	<a href="{% url 'main.views.add_picture' %}">Upload your picture</a> <br>
+	<a href="{% url 'add_picture' %}">Upload your picture</a> <br>
 {% endblock %}
 
 {% block main %}
 	{% if pictures %}
 		{% for picture in pictures %}
 			<div class='pic'>
-				<a href="{% url 'main.views.posts' %}?{% query_transform request id=picture.ID %}"> 
+				<a href="{% url 'posts' %}?{% query_transform request id=picture.ID %}"> 
 					<img class="thumbnails" src="{{ picture.thumbnail_url.url }}" alt="{{ picture.name }}" /> 
 				</a>
 			</div>

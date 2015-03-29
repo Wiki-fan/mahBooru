@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taggit',
-    'main',
+    'booru',
 )
 
 MIDDLEWARE_CLASSES = (

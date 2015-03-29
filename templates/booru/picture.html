@@ -1,7 +1,7 @@
-{% extends 'main/base.html' %}
+{% extends 'booru/base.html' %}
 	
 {% load static %}
-{% load main_templatetags %}
+{% load booru_templatetags %}
 
 {% block title %}{{ picture.name }}{% endblock %}
 
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block main %}
-
+	<h3>{{ picture.name }}</h3>
 	<a href="{{ picture.file_url.url  }}">
 		<img src="{{ picture.preview_url.url }}" alt="{{ picture.name }}" > 
 	</a>

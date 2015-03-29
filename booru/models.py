@@ -1,19 +1,25 @@
+import urllib2
+import os
 from django.db import models
 from django.core.files.storage import FileSystemStorage
-from urllib2 import *
-#from django.conf import settings
-from mahBooru.settings import *
-import os
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+#from django.conf import settings
+from mahBooru.settings import *
+
 
 picture_storage = FileSystemStorage(location=MEDIA_ROOT+"/images", base_url=os.path.join(MEDIA_URL,"images/"))
 preview_storage = FileSystemStorage(location=MEDIA_ROOT+"/images/preview", base_url=os.path.join(MEDIA_URL,"images/preview/"))
 thumbnail_storage = FileSystemStorage(location=MEDIA_ROOT+"/images/thumbnail", base_url=os.path.join(MEDIA_URL,"images/thumbnail/"))
 
+
 class MyImageField(models.ImageField):
 	def generate_filename(self, instance, filename):
 		return os.path.join(self.get_directory_name(), str(instance.ID)+'.'+filename.split('.')[-1])
+	
+	def __unicode__(self):
+		return "Image: "+self.name
+
 
 class Picture(models.Model):
 	ID = models.AutoField(primary_key=True)
@@ -29,11 +35,12 @@ class Picture(models.Model):
 	"""def save(self, *args, **kwargs):
 		filename = str(self.ID)+'.'+self.src.split('.')[-1]
 		self.file_url = picture_storage.save(filename, urlopen(self.src).read())"""
+	def __unicode__(self):
+		return "Picture:"+self.name
+		
 	class Meta:
 		ordering = ["ID"]
-		
-	def __unicode__(self):
-		return self.name
+
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User)
