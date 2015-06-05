@@ -1,0 +1,15 @@
+{% extends 'booru/base.html' %}
+
+{% load static %}
+
+{% block title %}About{% endblock %}
+
+{% block left %}
+{% endblock %}
+
+{% block main %}
+	<h1>404</h1>
+
+	<p>You are lucky. Page not found.</p>
+	<a href="{% url 'index' %}">Return to the homepage.</a><br />
+{% endblock %}

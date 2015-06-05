@@ -35,7 +35,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Application definition
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'taggit',
     'booru',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,7 +116,9 @@ PASSWORD_HASHERS = (
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 )
 
-LOGIN_URL='/login/'
+#LOGIN_URL='/login/'
+LOGIN_URL = '/accounts/login'
+
 TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.contrib.auth.context_processors.auth",
 	"django.core.context_processors.debug",
@@ -126,3 +129,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.core.context_processors.request",
 	"django.contrib.messages.context_processors.messages",
 )
+
+# Django registration redux settings
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/'
+

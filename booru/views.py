@@ -1,7 +1,8 @@
 from datetime import datetime
 import os
 import StringIO
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files import File
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from PIL import Image
 from .models import Picture, picture_storage, preview_storage, thumbnail_storage
-from .forms import PictureUploadForm, UserRegisterForm, UserProfileRegisterForm, TagSearchForm
+from .forms import PictureUploadForm, TagSearchForm#,UserRegisterForm, UserProfileRegisterForm
 from mahBooru.settings import *
 
     
@@ -89,8 +90,8 @@ def add_picture(request):
 	context_dict = {'picture_upload_form':form}
 
 	return render(request, 'booru/add_picture.html', context_dict)
-	
-	
+
+
 def posts(request):
 	if request.method == 'GET':
 		context_dict = { 'picture': Picture.objects.get(ID=request.GET['id'])}
@@ -99,7 +100,8 @@ def posts(request):
 	return render(request, 'booru/picture.html', context_dict)
 
 
-def user_register(request):
+# Old registration system
+"""def user_register(request):
 	registered = False
 	
 	if request.method == 'POST':
@@ -154,8 +156,9 @@ def user_logout(request):
     logout(request)
     
     return HttpResponseRedirect('/')
-    
-    
+"""
+
+
 def index(request):
 	context_dict = {} 
 	if request.method == 'GET':
@@ -178,4 +181,15 @@ def index(request):
 def about(request):
 	context_dict = {}
 	return render(request, 'booru/about.html', context_dict)
-		
+
+
+def handle404(request):
+	response = render_to_response("404.html", {}, context_instance=RequestContext(request))
+	response.status_code = 404
+	return response
+
+
+def handle500(request):
+	response = render_to_response("500.html", {}, context_instance=RequestContext(request))
+	response.status_code = 500
+	return response

@@ -13,7 +13,8 @@ class PictureUploadForm(forms.ModelForm):
 		model = Picture
 		fields = ('name',)
 
-
+# Old registration system
+"""
 class UserRegisterForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput())
 	
@@ -27,7 +28,7 @@ class UserProfileRegisterForm(forms.ModelForm):
 	class Meta:
 		model = UserProfile
 		fields = ('description', )
-
+"""
 		
 class TagSearchForm(forms.Form):
 	tags = forms.CharField(label='Search')
