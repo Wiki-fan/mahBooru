@@ -21,10 +21,10 @@
 		<div id='right'>
 			{% if user.is_authenticated %}
 				<p>Glad to see you, {{ user.username }}!</p>
-				<a href="{% url 'auth_logout' %}?next=/">Logout</a>
+				<a href="{% url 'user_logout' %}?next=/">Logout</a>
 			{% else %}
-				<a href="{% url 'registration_register' %}">Register</a>
-				<a href="{% url 'auth_login' %}">Login</a>
+				<a href="{% url 'user_register' %}">Register</a>
+				<a href="{% url 'user_login' %}">Login</a>
 			{% endif %}
 		</div>
 		

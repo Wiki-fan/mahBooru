@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from PIL import Image
-from .models import Picture, picture_storage, preview_storage, thumbnail_storage
-from .forms import PictureUploadForm, TagSearchForm#,UserRegisterForm, UserProfileRegisterForm
+from .models import Picture, UserProfile, picture_storage, preview_storage, thumbnail_storage
+from .forms import PictureUploadForm, TagSearchForm, UserRegisterForm, UserProfileRegisterForm
 from mahBooru.settings import *
 
     
@@ -47,6 +47,7 @@ def add_picture(request):
 
 		if form.is_valid():
 			instance = Picture(name=request.POST['name'])
+			instance.uploaded_by = UserProfile.objects.get(user=request.user)
 			instance.save()
 			
 			instance.file_url = request.FILES['file_url']
@@ -95,13 +96,12 @@ def add_picture(request):
 def posts(request):
 	if request.method == 'GET':
 		context_dict = { 'picture': Picture.objects.get(ID=request.GET['id'])}
-		print Picture.objects.get(ID=request.GET['id']).tags.names()
+		#print Picture.objects.get(ID=request.GET['id']).tags.names()
 	
 	return render(request, 'booru/picture.html', context_dict)
 
 
-# Old registration system
-"""def user_register(request):
+def user_register(request):
 	registered = False
 	
 	if request.method == 'POST':
@@ -156,7 +156,6 @@ def user_logout(request):
     logout(request)
     
     return HttpResponseRedirect('/')
-"""
 
 
 def index(request):

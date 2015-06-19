@@ -12,6 +12,11 @@
 			<a href="{% url 'index' %}?{% query_replace tags=i %}"><li>{{ i }}</li></a>
 		{% endfor %}
 	</ul>
+	<p>ID: {{ picture.ID }}</p>
+	<p>Uploaded by: {{ picture.uploaded_by.user.username }}</p>
+	<p>Date: {{ picture.upload_datetime|date:"d M Y H:i" }}</p>
+	<p>Size: {{ picture.file_url.file.size|filesizeformat }}</p>
+	
 {% endblock %}
 
 {% block main %}

@@ -4,17 +4,16 @@ from .models import Picture, UserProfile
 
 
 class PictureUploadForm(forms.ModelForm):
-	name = forms.CharField(label="Enter picture name:")
+	name = forms.CharField(label="Enter picture name:", required=False)
 	#src = forms.CharField(max_length=256, help_text="Enter source URL")
 	file_url = forms.ImageField(label="Choose file:")
-	tags = forms.CharField(label="Enter tags, separated with whitespaces:")
+	tags = forms.CharField(label="Enter tags, separated with whitespaces:", required=False)
 
 	class Meta:
 		model = Picture
-		fields = ('name',)
+		fields = ('name','file_url', 'tags')
 
-# Old registration system
-"""
+
 class UserRegisterForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput())
 	
@@ -28,7 +27,7 @@ class UserProfileRegisterForm(forms.ModelForm):
 	class Meta:
 		model = UserProfile
 		fields = ('description', )
-"""
+
 		
 class TagSearchForm(forms.Form):
 	tags = forms.CharField(label='Search')

@@ -4,13 +4,20 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
-#from django.conf import settings
 from mahBooru.settings import *
 
 
 picture_storage = FileSystemStorage(location=MEDIA_ROOT+"/images", base_url=os.path.join(MEDIA_URL,"images/"))
 preview_storage = FileSystemStorage(location=MEDIA_ROOT+"/images/preview", base_url=os.path.join(MEDIA_URL,"images/preview/"))
 thumbnail_storage = FileSystemStorage(location=MEDIA_ROOT+"/images/thumbnail", base_url=os.path.join(MEDIA_URL,"images/thumbnail/"))
+
+
+class UserProfile(models.Model):
+	user = models.OneToOneField(User, primary_key=True)
+	description = models.CharField(max_length=256)
+	
+	def __unicode__(self):
+		return self.user.username
 
 
 class MyImageField(models.ImageField):
@@ -29,6 +36,8 @@ class Picture(models.Model):
 	preview_url = MyImageField(storage=preview_storage)
 	thumbnail_url = MyImageField(storage=thumbnail_storage)
 	tags = TaggableManager()
+	uploaded_by = models.OneToOneField(UserProfile)
+	upload_datetime = models.DateTimeField(auto_now_add=True)
 	
 	#TODO: load from URL
 	#not working
@@ -41,10 +50,3 @@ class Picture(models.Model):
 	class Meta:
 		ordering = ["ID"]
 
-
-class UserProfile(models.Model):
-	user = models.OneToOneField(User)
-	description = models.CharField(max_length=256)
-	
-	def __unicode__(self):
-		return self.user.username

@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'taggit',
     'booru',
-    'registration',
+    #'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -116,8 +116,8 @@ PASSWORD_HASHERS = (
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 )
 
-#LOGIN_URL='/login/'
-LOGIN_URL = '/accounts/login'
+LOGIN_URL='/login/'
+#LOGIN_URL = '/accounts/login'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.contrib.auth.context_processors.auth",
@@ -131,8 +131,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # Django registration redux settings
-REGISTRATION_OPEN = True
+"""REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = '/'
-
+"""
