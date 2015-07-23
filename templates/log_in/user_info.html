@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} {{ usr.user.username }} - information{% endblock %}
+
+{% block left %}
+<a href="{% url 'user_list' %}">All users</a> <br>
+{% endblock %}
+
+{% block main %}
+	<h1>User information</h1>
+	<p>Username: {{ usr.user.username }}</p>
+	<p>Description: {{ usr.description }}</p>
+	<p>Register date: {{ usr.user.date_joined|date:"d M Y H:i" }}</p>
+{% endblock %}

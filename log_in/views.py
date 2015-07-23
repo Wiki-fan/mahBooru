@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import UserRegisterForm, UserProfileRegisterForm
+from .models import UserProfile
 
 def user_register(request):
 	registered = False
@@ -59,3 +61,17 @@ def user_logout(request):
     logout(request)
     
     return HttpResponseRedirect('/')
+
+def user_info(request):
+	if request.method == 'GET':
+		context_dict = { 'usr': UserProfile.objects.get(user=User.objects.get(username=request.GET['name']))}
+	
+	return render(request, "log_in/user_info.html", context_dict)
+	
+def user_list(request):
+	if request.method == 'GET':
+		context_dict = { 'users': UserProfile.objects.all() }
+		
+	return render(request, "log_in/user_list.html", context_dict)
+	
+	
