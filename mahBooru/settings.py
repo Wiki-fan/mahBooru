@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'taggit',
     'booru',
-    #'registration',
+    'log_in',
 )
 
 MIDDLEWARE_CLASSES = (

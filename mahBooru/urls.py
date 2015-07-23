@@ -12,5 +12,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ ?', include('booru.urls')),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^user/', include('log_in.urls')),
 )
