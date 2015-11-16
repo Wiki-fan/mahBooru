@@ -1,27 +1,29 @@
 {% extends 'base.html' %}
-	
+
 {% load static %}
 {% load booru_templatetags %}
 
 {% block title %}{{ picture.name }}{% endblock %}
 
 {% block left %}
-	<p>Tags:</p>
-	<ul>
-		{% for i in picture.tags.names %}
-			<a href="{% url 'index' %}?{% query_replace tags=i %}"><li>{{ i }}</li></a>
-		{% endfor %}
-	</ul>
-	<p>ID: {{ picture.ID }}</p>
-	<p>Uploaded by: {{ picture.uploaded_by.user.username }}</p>
-	<p>Date: {{ picture.upload_datetime|date:"d M Y H:i" }}</p>
-	<p>Size: {{ picture.file_url.file.size|filesizeformat }}</p>
-	
+    <p>Tags:</p>
+    <ul>
+        {% for i in picture.tags.names %}
+            <a href="{% url 'index' %}?{% query_replace tags=i %}">
+                <li>{{ i }}</li>
+            </a>
+        {% endfor %}
+    </ul>
+    <p>ID: {{ picture.ID }}</p>
+    <p>Uploaded by: {{ picture.uploaded_by.user.username }}</p>
+    <p>Date: {{ picture.upload_datetime|date:"d M Y H:i" }}</p>
+    <p>Size: {{ picture.file_url.file.size|filesizeformat }}</p>
+
 {% endblock %}
 
 {% block main %}
-	<h3>{{ picture.name }}</h3>
-	<a href="{{ picture.file_url.url  }}">
-		<img src="{{ picture.preview_url.url }}" alt="{{ picture.name }}" > 
-	</a>
+    <h3>{{ picture.name }}</h3>
+    <a href="{{ picture.file_url.url }}">
+        <img src="{{ picture.preview_url.url }}" alt="{{ picture.name }}">
+    </a>
 {% endblock %}
