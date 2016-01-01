@@ -1,52 +1,68 @@
-h1#site_title {
-	float:left;
-	display:inline-block;
-	margin-left:30px;
-	margin-right:30px;
-}
-
 div#header {
-	clear:both;
-	display:block;
+    clear: both;
+    display: block;
+    /* margin-top: 10 px;*/
+    position: relative;
+    vertical-align: top;
 }
 
-div#page {
-	clear:both;
-	display:block;
-}
-
-div#left {
-	float:left;
-	width:200px;
-	margin-left:20px;
-}
-
-div#main {
-	margin-left:40px;
-	float:left;
+h1#site_title {
+    float: left;
+    display: inline-block;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 div#right {
-	float:right;
-	width:100px;
+    float: right;
+    width: 100px;
+}
 
+div#left {
+    float: left;
+    width: 200px;
+    margin-left: 20px;
 }
 
 div#footer {
-	display:block;
-	clear:both;
-	text-align:center;
-	padding-top:30px;
+    display: block;
+    clear: both;
+    text-align: center;
+    padding-top: 30px;
+}
+
+div#page {
+    clear: both;
+    /*display:block;
+    position:relative;
+    overflow:visible;*/
+}
+
+div#main {
+    /* float: left; */
+    margin-left: 220px; /* TODO: fix it and make normal formatting */
 }
 
 div.pic {
-	display:inline-block;
-	vertical-align:middle;
-	border:1px solid black;
-	width:160px;
-	height:160px;
-	text-align:center;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid black;
+    width: 160px;
+    height: 160px;
+    position: relative;
+    margin: 0px 0px 4px 0px;
 }
 
+/* Vertical align of pictures */
 img.thumbnails {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+div.pagination {
+    text-align: center;
 }

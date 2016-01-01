@@ -13,8 +13,8 @@
 	{% if registered %}
 		<strong>Registration succeed</strong><br>
 	{% else %}
-		<form id="user_form" method="post" action="{% url 'user_register' %}"
-			enctype="multipart/form-data">
+        <form id="registration_form" method="post" action="{% url 'user_register' %}"
+              enctype="multipart/form-data">
 
 			{% csrf_token %}
 

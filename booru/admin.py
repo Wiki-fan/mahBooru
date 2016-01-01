@@ -4,7 +4,7 @@ from .models import Picture, UserProfile
 
 
 class PictureAdmin(admin.ModelAdmin):
-	list_display = ('ID', 'name', 'tags')
+	list_display = ('id', 'name', 'rating', 'score',)
 
 
 admin.site.register(Picture, PictureAdmin)

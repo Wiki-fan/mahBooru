@@ -1,18 +1,15 @@
-from django.conf.urls import patterns, url
-from django.conf import settings
-from . import views
-#from django.conf.urls.static import static
+from django.conf.urls import url
 
-urlpatterns = patterns('',
+from . import views
+
+# from django.conf.urls.static import static
+
+urlpatterns = [
 	url(r'^register/$', views.user_register, name='user_register'),
 	url(r'^login/$', views.user_login, name='user_login'),
 	url(r'^logout/$', views.user_logout, name='user_logout'),
-	) 
-	
-if settings.DEBUG:
-    urlpatterns += patterns(
-        'django.views.static',
-        (r'media/(?P<path>.*)',
-        'serve',
-        {'document_root': settings.MEDIA_ROOT}), )
- 
+	url(r'^profile/$', views.user_profile, name='user_profile')
+]
+
+"""if settings.DEBUG:
+	urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)"""

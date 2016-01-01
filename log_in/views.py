@@ -4,14 +4,16 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 from .forms import UserRegisterForm, UserProfileRegisterForm
+from .models import UserProfile
 
 
 def user_register(request):
 	registered = False
 
 	if request.method == 'POST':
-		user_form = UserRegisterForm(data=request.POST)
-		user_profile_form = UserProfileRegisterForm(data=request.POST)
+		# Receiving register data
+		user_form = UserRegisterForm(data=request.POST, files=request.FILES)
+		user_profile_form = UserProfileRegisterForm(data=request.POST, files=request.FILES)
 		if user_form.is_valid() and user_profile_form.is_valid():
 			user = user_form.save()
 
@@ -20,13 +22,14 @@ def user_register(request):
 
 			user_profile = user_profile_form.save(commit=False)
 			user_profile.user = user
-
+			# user_profile.userpic = request.POST.get()
 			user_profile.save()
 
 			registered = True
 		else:
 			print user_form.errors, user_profile_form.errors
 	else:
+		# Simply display form
 		user_form = UserRegisterForm()
 		user_profile_form = UserProfileRegisterForm()
 
@@ -61,3 +64,11 @@ def user_logout(request):
 	logout(request)
 
 	return HttpResponseRedirect('/')
+
+
+def user_profile(request):
+	context_dict = {}
+	if request.method == "GET":
+		context_dict['usr'] = UserProfile.objects.get(user__username=request.GET.get('user'))
+		print context_dict['usr']
+		return render(request, "log_in/user_profile.html", context_dict)

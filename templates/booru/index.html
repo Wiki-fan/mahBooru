@@ -6,21 +6,29 @@
 {% block title %}Main{% endblock %}
 
 {% block left %}
-	{% show_all_tags %}
-	<a href="{% url 'add_picture' %}">Upload your picture</a> <br>
+    {% show_all_tags %}
+    <a href="{% url 'add_picture' %}">Upload your picture</a> <br>
 {% endblock %}
 
 {% block main %}
-	{% if pictures %}
-		{% for picture in pictures %}
-			<div class='pic'>
-				<a href="{% url 'posts' %}?{% query_transform request id=picture.ID %}"> 
-					<img class="thumbnails" src="{{ picture.thumbnail_url.url }}" alt="{{ picture.name }}" /> 
-				</a>
-			</div>
-		{% endfor %}
-	{% else %}
-		<b>Pictures aren't there</b>
-	{% endif %}
+    {% for picture in pictures.object_list %}
+        <div class='pic'>
+            <a href="{% url 'posts' %}?{% query_transform request id=picture.id %}">
+                <img class="thumbnails" src="{{ picture.thumbnail_url.url }}" alt="{{ picture.name }}"/>
+            </a>
+        </div>
+    {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if pictures.has_previous %}
+                <a href="?page={{ pictures.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current">Page {{ pictures.number }} of {{ pictures.paginator.num_pages }}.</span>
+            {% if pictures.has_next %}
+                <a href="?page={{ pictures.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
 {% endblock %}
 

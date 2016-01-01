@@ -14,10 +14,16 @@
             </a>
         {% endfor %}
     </ul>
-    <p>ID: {{ picture.ID }}</p>
-    <p>Uploaded by: {{ picture.uploaded_by.user.username }}</p>
+    <p>ID: {{ picture.id }}</p>
+    <p><a href="{{ picture.src }}">Source</a></p>
+    <p>Rating: {{ picture.rating }}</p>
+    <p>Score: {{ picture.score }}</p>
+    <p>Uploaded by: <a
+            href="{% url 'user_profile' %}?{% query_replace user=picture.uploaded_by %}"> {{ picture.uploaded_by.user.username }} </a>
+    </p>
     <p>Date: {{ picture.upload_datetime|date:"d M Y H:i" }}</p>
     <p>Size: {{ picture.file_url.file.size|filesizeformat }}</p>
+    <p>Dimensions: {{ picture.image_width }} x {{ picture.image_height }} </p>
 
 {% endblock %}
 

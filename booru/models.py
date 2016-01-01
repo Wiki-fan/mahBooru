@@ -3,6 +3,7 @@ from django.db import models
 from taggit.managers import TaggableManager
 
 from log_in.models import UserProfile
+from mahBooru.common.MyImageField import MyImageField
 from mahBooru.settings import *
 
 picture_storage = FileSystemStorage(location=MEDIA_ROOT + "/images", base_url=os.path.join(MEDIA_URL, "images/"))
@@ -12,33 +13,47 @@ thumbnail_storage = FileSystemStorage(location=MEDIA_ROOT + "/images/thumbnail",
                                       base_url=os.path.join(MEDIA_URL, "images/thumbnail/"))
 
 
-class MyImageField(models.ImageField):
-	def generate_filename(self, instance, filename):
-		return os.path.join(self.get_directory_name(), str(instance.ID) + '.' + filename.split('.')[-1])
-
-	def __unicode__(self):
-		return "Image: " + self.name
-
-
 class Picture(models.Model):
-	ID = models.AutoField(primary_key=True)
+	# Picture name
 	name = models.CharField(max_length=256)
-	# src = models.CharField(max_length=256)
-	file_url = MyImageField(storage=picture_storage)
+	# Source URL (if presented)
+	src = models.URLField(default='')
+	# Initial picture size
+	image_width = models.PositiveIntegerField(null=True)
+	image_height = models.PositiveIntegerField(null=True)
+	# Initial size picture file URL
+	file_url = MyImageField(storage=picture_storage, width_field='image_width', height_field='image_height')
+	# Preview picture URL
 	preview_url = MyImageField(storage=preview_storage)
+	# Thumbnail picture URL
 	thumbnail_url = MyImageField(storage=thumbnail_storage)
+	# Tags
 	tags = TaggableManager()
-	uploaded_by = models.OneToOneField(UserProfile)
+	# Pools
+	pools = models.CharField(max_length=1000)  # TODO: pools.
+	# Rating (s for Safe, q for Questionable, e for Explicit)
+	SAFE = 's'
+	QUESTIONABLE = 'q'
+	EXPLICIT = 'e'
+	RATING_CHOICES = (
+		(SAFE, 'Safe'),
+		(QUESTIONABLE, 'Questionable'),
+		(EXPLICIT, 'Explicit'),
+	)
+	rating = models.CharField(max_length=1, choices=RATING_CHOICES)
+	# Score
+	score = models.IntegerField(default=0)
+	# Artist TODO: should we have artist as a new field, or just tag?
+	# artist = models.CharField(max_length=256)
+	# Uploader
+	uploaded_by = models.ForeignKey(UserProfile)
+	# Upload date and time
 	upload_datetime = models.DateTimeField(auto_now_add=True)
-
-	# TODO: load from URL
-	# not working
-	"""def save(self, *args, **kwargs):
-		filename = str(self.ID)+'.'+self.src.split('.')[-1]
-		self.file_url = picture_storage.save(filename, urlopen(self.src).read())"""
+	# Picture hash
+	md5 = models.CharField(max_length=32)  # TODO: decide what to do with it.
 
 	def __unicode__(self):
 		return "Picture:" + self.name
 
 	class Meta:
-		ordering = ["ID"]
+		ordering = ["id"]

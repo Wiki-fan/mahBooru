@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} {{ usr.user.username }} - profile{% endblock %}
+
+{% block left %}
+{% endblock %}
+
+{% block main %}
+    <h1>{{ usr.user.username }}</h1>
+    <p>{{ usr.description }}</p>
+    <img src="{{ usr.userpic.url }}" alt="{{ usr.user.username }}'s avatar">
+    <a href="{% url 'index' %}">Return to the homepage.</a><br/>
+{% endblock %}

@@ -7,9 +7,13 @@ from booru.forms import TagSearchForm
 register = template.Library()
 
 
+# TODO: make it cleaner and simpler.
 @register.simple_tag
 def query_transform(request, **kwargs):
-	updated = request.GET.copy()
+	if request == '':
+		updated = QueryDict('', mutable=True)
+	else:
+		updated = request.GET.copy()
 	updated.update(kwargs)
 	return updated.urlencode()
 
@@ -23,7 +27,6 @@ def query_replace(**kwargs):
 
 @register.inclusion_tag('booru/show_all_tags.html')
 def show_all_tags():
-	# print Tag.objects.all()
 	return {'tags': Tag.objects.all()}
 
 
