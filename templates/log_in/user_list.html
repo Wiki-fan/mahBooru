@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block main %}
-	{% if users %}
-		{% for user in users %}
-			<div class='user'>
-				<a href="{% url 'user_info' %}?{% query_transform request name=user.user.username %}"> 
-					{{ user.user.username }}</a>: {{ user.description }}
-			</div>
-		{% endfor %}
-	{% else %}
-		<p>Nobody registered yet!</p>
-	{% endif %}
+    {% if users %}
+        {% for usr in users %}
+            <div class='user'>
+                <a href="{% url 'user_profile' %}?{% query_transform request user=usr.user.username %}">
+                    {{ usr.user.username }}</a> {{ usr.description }}
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
  

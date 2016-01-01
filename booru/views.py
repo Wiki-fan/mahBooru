@@ -141,7 +141,8 @@ def index(request):
 			# print query_list
 			picture_list = Picture.objects.all()
 			for i in query_list:
-				picture_list = picture_list.filter(tags__name__contains=i).distinct()
+				if i != '':  # If tag is empty string
+					picture_list = picture_list.filter(tags__name__contains=i).distinct()
 			# picture_list = Picture.objects.filter(tags__name__contains=query_list).distinct()
 			# print picture_list
 		else:
