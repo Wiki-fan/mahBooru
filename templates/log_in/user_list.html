@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load booru_templatetags %}
+
+{% block title %} User list{% endblock %}
+
+{% block left %}
+{% endblock %}
+
+{% block main %}
+	{% if users %}
+		{% for user in users %}
+			<div class='user'>
+				<a href="{% url 'user_info' %}?{% query_transform request name=user.user.username %}"> 
+					{{ user.user.username }}</a>: {{ user.description }}
+			</div>
+		{% endfor %}
+	{% else %}
+		<p>Nobody registered yet!</p>
+	{% endif %}
+{% endblock %}
+ 
