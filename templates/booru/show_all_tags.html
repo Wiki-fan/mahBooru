@@ -1,9 +1,22 @@
 {% load booru_templatetags %}
 <p>Tags:</p>
 <ul>
-    {% for i in tags %}
+    {# Tags. #}
+    {% for i in tag_paginator.object_list %}
         <a href="{% url 'index' %}?{% query_replace tags=i.name %}">
             <li> {{ i.name }}</li>
         </a>
     {% endfor %}
+    {# Pagination for tags. #}
+    <div class="pagination">
+        <span class="step-links">
+            {% if tag_paginator.has_previous %}
+                <a href="?tag_page={{ tag_paginator.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current">{{ tag_paginator.number }} of {{ tag_paginator.paginator.num_pages }}</span>
+            {% if tag_paginator.has_next %}
+                <a href="?tag_page={{ tag_paginator.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
 </ul>

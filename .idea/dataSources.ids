@@ -68,7 +68,6 @@
       <column name="src" sqlType="VARCHAR(200)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="file_url" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="preview_url" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="thumbnail_url" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="rating" sqlType="VARCHAR(1)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="score" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="upload_datetime" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
@@ -77,6 +76,7 @@
       <column name="pools" sqlType="VARCHAR(1000)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="image_height" sqlType="INTEGER UNSIGNED" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <column name="image_width" sqlType="INTEGER UNSIGNED" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="thumbnail_url" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_booru_picture_1" columns="uploaded_by_id" ref-table="log_in_userprofile" ref-schema="" ref-catalog="" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="booru_picture_4095e96b" unique="true" columns="uploaded_by_id"/>

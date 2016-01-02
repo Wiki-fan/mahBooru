@@ -10,6 +10,3 @@ urlpatterns = [
 	url(r'^posts$', views.posts, name='posts'),
 	url(r'^about/$', views.about, name='about'),
 ]
-
-"""if settings.DEBUG:
-	urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)"""

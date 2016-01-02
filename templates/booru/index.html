@@ -6,7 +6,7 @@
 {% block title %}Main{% endblock %}
 
 {% block left %}
-    {% show_all_tags %}
+    {% show_all_tags request %}
     <a href="{% url 'add_picture' %}">Upload your picture</a> <br>
 {% endblock %}
 

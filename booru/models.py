@@ -3,6 +3,8 @@ from django.db import models
 from taggit.managers import TaggableManager
 
 from log_in.models import UserProfile
+from mahBooru.common.ImageStuff import *
+from mahBooru.common.ImageStuff import create_thumbnails, add_tags, save_image, hash_image
 from mahBooru.common.MyImageField import MyImageField
 from mahBooru.settings import *
 
@@ -11,6 +13,22 @@ preview_storage = FileSystemStorage(location=MEDIA_ROOT + "/images/preview",
                                     base_url=os.path.join(MEDIA_URL, "images/preview/"))
 thumbnail_storage = FileSystemStorage(location=MEDIA_ROOT + "/images/thumbnail",
                                       base_url=os.path.join(MEDIA_URL, "images/thumbnail/"))
+
+
+class PictureManager(models.Manager):
+	def create_picture(self, rating, src, score, tag_string, image_data, file_extension):
+		picture = Picture(rating=rating, src=src, name='', score=score)
+
+		picture.uploaded_by = UserProfile.objects.get(
+				user=UserProfile.objects.get(user__username="smbd"))  # TODO: temporary solution.
+		picture.save()
+
+		save_image(image_data, picture.file_url, str(picture.pk) + '.' + file_extension)
+		create_thumbnails(picture, '.' + picture.file_url.name.split('.')[-1])
+		add_tags(picture, tag_string)
+		picture.md5 = hash_image(picture.file_url)
+		picture.save()
+		return picture
 
 
 class Picture(models.Model):
@@ -51,6 +69,8 @@ class Picture(models.Model):
 	upload_datetime = models.DateTimeField(auto_now_add=True)
 	# Picture hash
 	md5 = models.CharField(max_length=32)  # TODO: decide what to do with it.
+
+	objects = PictureManager()
 
 	def __unicode__(self):
 		return "Picture:" + self.name

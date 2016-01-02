@@ -1,48 +1,15 @@
-import StringIO
-import hashlib
 import urllib2
 
-from PIL import Image
 from django.contrib.auth.decorators import login_required
-from django.core.files import File
-from django.core.files.base import ContentFile
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 
 from log_in.models import UserProfile
+from mahBooru.common.ImageStuff import create_thumbnails, add_tags, save_image, hash_image
 from mahBooru.settings import *
 from .forms import PictureUploadForm
-from .models import Picture, picture_storage
-
-
-def resize_image(im, dest_size):
-	image_w, image_h = im.size
-	# print im.size
-	aspect_ratio = image_w / float(image_h)
-	new_height = int(dest_size[0] / aspect_ratio)
-	new_width = int(dest_size[1] * aspect_ratio)
-	# print new_height, new_width
-	if new_height < dest_size[1] and new_height < image_h:
-		final_width = dest_size[0]
-		final_height = new_height
-	elif new_width < dest_size[0] and new_width < image_w:
-		final_width = new_width
-		final_height = dest_size[1]
-	else:
-		final_width, final_height = dest_size
-	# print final_width, final_height
-	return im.resize((final_width, final_height), Image.ANTIALIAS)
-
-
-"""def resize_image(im, dest_size):
-	image_w, image_h = im.size
-	aspect_ratio = image_w / float(image_h)
-	if image_w<=dest_size[0]:
-		return im
-	else:
-		final_height = int(dest_size[0] / float(image_w) * image_h)
-		return im.resize((image_w, final_height), Image.ANTIALIAS)"""
+from .models import Picture
 
 
 @login_required(login_url='user_login')
@@ -53,6 +20,7 @@ def add_picture(request):
 		if form.is_valid():
 			# Filling some fields directly from form
 			instance = form.save(commit=False)
+
 			instance.uploaded_by = UserProfile.objects.get(user=request.user)
 			instance.save()
 
@@ -60,12 +28,9 @@ def add_picture(request):
 			if instance.src != '':
 				filename = instance.src.split('/')[-1]
 				f, e = os.path.splitext(filename)
-
-				# TODO: need to handle unopened URLs correctly
-				image_file = urllib2.urlopen(instance.src).read()
 				f = str(instance.pk)
 				filename = f + e
-				instance.file_url.save(filename, ContentFile(image_file))
+				save_image(urllib2.urlopen(instance.src).read(), instance.file_url, filename)
 			# instance.file_url.save(instance.file_url.generate_filename(), ContentFile(image_file) )
 			else:
 				# Uploading picture from file
@@ -78,39 +43,13 @@ def add_picture(request):
 
 			# tags
 			instance.save()
-			lst = [i for i in request.POST['tags'].split(' ')]
-			for i in lst:
-				if i != '':
-					instance.tags.add(i)
+			add_tags(instance, request.POST['tags'])
 
 			# md5 hash
-			instance.file_url.open()
-			instance.md5 = hashlib.md5(instance.file_url.read()).hexdigest()
-			instance.file_url.close()
+			instance.md5 = hash_image(instance.file_url)
 			# print instance.md5
 
-			im = Image.open(os.path.join(picture_storage.location, filename))
-
-			# thumbnail
-			thumbnail_size = (150, 150)
-			o_im = resize_image(im, thumbnail_size)
-			o_name = f + '.jpg'
-			o_string = StringIO.StringIO()
-			o_im.save(o_string, "JPEG")
-			instance.thumbnail_url.save(o_name, File(o_string))
-			o_string.close()
-
-			# preview
-			preview_size = (1000, 1000)
-			o_im = resize_image(im, preview_size)
-			o_name = f + '.jpg'
-			o_string = StringIO.StringIO()
-			o_im.save(o_string, "JPEG")
-			instance.preview_url.save(o_name, File(o_string))
-			o_string.close()
-
-			im.close()
-			o_im.close()
+			create_thumbnails(instance, f)
 
 			instance.save()
 		else:
@@ -143,8 +82,8 @@ def index(request):
 			for i in query_list:
 				if i != '':  # If tag is empty string
 					picture_list = picture_list.filter(tags__name__contains=i).distinct()
-			# picture_list = Picture.objects.filter(tags__name__contains=query_list).distinct()
-			# print picture_list
+				# picture_list = Picture.objects.filter(tags__name__contains=query_list).distinct()
+				# print picture_list
 		else:
 			picture_list = Picture.objects.all()
 		paginator = Paginator(picture_list, 18)

@@ -1,4 +1,5 @@
 from django import template
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import QueryDict
 from taggit.models import Tag
 
@@ -7,13 +8,9 @@ from booru.forms import TagSearchForm
 register = template.Library()
 
 
-# TODO: make it cleaner and simpler.
 @register.simple_tag
 def query_transform(request, **kwargs):
-	if request == '':
-		updated = QueryDict('', mutable=True)
-	else:
-		updated = request.GET.copy()
+	updated = request.GET.copy()
 	updated.update(kwargs)
 	return updated.urlencode()
 
@@ -26,8 +23,18 @@ def query_replace(**kwargs):
 
 
 @register.inclusion_tag('booru/show_all_tags.html')
-def show_all_tags():
-	return {'tags': Tag.objects.all()}
+def show_all_tags(request):
+	paginator = Paginator(Tag.objects.all(), 20)
+	tag_page = request.GET.get('tag_page')
+
+	try:
+		tags = paginator.page(tag_page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		tags = paginator.page(1)
+	except EmptyPage:  # If page is out of range, deliver last page of results.
+		tags = paginator.page(paginator.num_pages)
+	return {'tag_paginator': tags}
 
 
 @register.inclusion_tag('booru/tag_search.html')
