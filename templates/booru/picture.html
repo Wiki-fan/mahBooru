@@ -7,7 +7,7 @@
 
 {% block left %}
     <p>Tags:</p>
-    <ul>
+    <ul class="tag_list">
         {% for i in picture.tags.names %}
             <a href="{% url 'index' %}?{% query_replace tags=i %}">
                 <li>{{ i }}</li>

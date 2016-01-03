@@ -25,8 +25,9 @@ class Command(BaseCommand):
 		for f in os.listdir('./'):
 			while True:
 				try:
-					r = requests.post("http://iqdb.org/", files={'file': open(f, 'rb')}, data={"submit": True})
-
+					image_file = open(f, 'rb')
+					r = requests.post("http://iqdb.org/", files={'file': image_file}, data={"submit": True})
+					image_file.close()
 					soup = BeautifulSoup(r.text, 'html.parser')
 
 					lst = soup.find_all('td', attrs={'class': 'image'})
@@ -52,14 +53,16 @@ class Command(BaseCommand):
 							break
 					if url == '':
 						print "Picture wasn't found"
+						image_file = open(f, 'rb')
 						pic = Picture.objects.create_picture(
 								src='',
 								rating='s',
 								score=0,
 								tag_string='not_founded',
-								image_data=urllib2.urlopen("http://danbooru.donmai.us" + large_file_url).read(),
-								file_extension=large_file_url.split('.')[-1]
+								image_data=image_file.read(),
+								file_extension=f.split('.')[-1]
 						)
+						image_file.close()
 						break
 					else:
 						count += 1
@@ -89,4 +92,4 @@ class Command(BaseCommand):
 				except requests.exceptions.ConnectionError:
 					print "Connection error... retry..."
 
-	print "All pictures are processed"
+		print "All pictures are processed"

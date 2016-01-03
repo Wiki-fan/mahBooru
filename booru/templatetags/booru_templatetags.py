@@ -11,7 +11,9 @@ register = template.Library()
 @register.simple_tag
 def query_transform(request, **kwargs):
 	updated = request.GET.copy()
-	updated.update(kwargs)
+	for k, v in kwargs.iteritems():
+		updated[k] = v
+	# updated.update(kwargs)
 	return updated.urlencode()
 
 
@@ -22,9 +24,10 @@ def query_replace(**kwargs):
 	return query_dict.urlencode()
 
 
-@register.inclusion_tag('booru/show_all_tags.html')
-def show_all_tags(request):
+@register.inclusion_tag('booru/show_all_tags.html', takes_context=True)
+def show_all_tags(context):
 	paginator = Paginator(Tag.objects.all(), 20)
+	request = context['request']
 	tag_page = request.GET.get('tag_page')
 
 	try:
@@ -34,7 +37,7 @@ def show_all_tags(request):
 		tags = paginator.page(1)
 	except EmptyPage:  # If page is out of range, deliver last page of results.
 		tags = paginator.page(paginator.num_pages)
-	return {'tag_paginator': tags}
+	return {'tag_paginator': tags, 'request': request}
 
 
 @register.inclusion_tag('booru/tag_search.html')

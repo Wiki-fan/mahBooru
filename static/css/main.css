@@ -66,3 +66,8 @@ img.thumbnails {
 div.pagination {
     text-align: center;
 }
+
+ul.tag_list {
+    list-style-type: none;
+    margin-left: -20px;
+}

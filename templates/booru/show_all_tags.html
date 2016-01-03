@@ -1,6 +1,6 @@
 {% load booru_templatetags %}
 <p>Tags:</p>
-<ul>
+<ul class="tag_list">
     {# Tags. #}
     {% for i in tag_paginator.object_list %}
         <a href="{% url 'index' %}?{% query_replace tags=i.name %}">
@@ -11,11 +11,11 @@
     <div class="pagination">
         <span class="step-links">
             {% if tag_paginator.has_previous %}
-                <a href="?tag_page={{ tag_paginator.previous_page_number }}">previous</a>
+                <a href="?{% query_transform request tag_page=tag_paginator.previous_page_number %}"><</a>
             {% endif %}
             <span class="current">{{ tag_paginator.number }} of {{ tag_paginator.paginator.num_pages }}</span>
             {% if tag_paginator.has_next %}
-                <a href="?tag_page={{ tag_paginator.next_page_number }}">next</a>
+                <a href="?{% query_transform request tag_page=tag_paginator.next_page_number %}"> ></a>
             {% endif %}
         </span>
     </div>

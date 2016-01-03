@@ -6,51 +6,25 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 
 
-# TODO: better rescaling.
+# Rescales image to fit into dest_size. Does not upscale.
 def resize_image(im, dest_size):
 	dest_w, dest_h = dest_size
 	image_w, image_h = im.size
-	# print im.size
 	aspect_ratio = image_w / float(image_h)
-	"""if image_h > dest_h:
-		final_w = dest_h*aspect_ratio
+	final_w, final_h = image_w, image_h
+	if final_h > dest_h:
+		final_w = int(dest_h * aspect_ratio)
 		final_h = dest_h
-	if image_w > dest_w:
-		final_h = dest_w/aspect_ratio
-		final_w = dest_w"""
-	new_height = int(dest_size[0] / aspect_ratio)
-	new_width = int(dest_size[1] * aspect_ratio)
-	# print new_height, new_width
-
-	if new_height < dest_size[1] and new_height < image_h:
-		final_width = dest_size[0]
-		final_height = new_height
-	elif new_width < dest_size[0] and new_width < image_w:
-		final_width = new_width
-		final_height = dest_size[1]
-	elif new_height > dest_size[1] and new_height < image_h:
-		final_width = new_width
-		final_height = image_h
-	elif new_width < dest_size[0] and new_width < image_w:
-		final_width = image_w
-		final_height = new_height
-	else:
-		final_width, final_height = dest_size
-	# print final_width, final_height
-	return im.resize((final_width, final_height), Image.ANTIALIAS)
-
-
-"""def resize_image(im, dest_size):
-	image_w, image_h = im.size
-	aspect_ratio = image_w / float(image_h)
-	if image_w<dest_size[0]:
-		return im
-	else:
-		final_height = int(dest_size[0] / float(image_w) * image_h)
-		return im.resize((image_w, final_height), Image.ANTIALIAS)"""
-
-
-# def resize_thumbnail(im, dest_size):
+	if final_w > dest_w:
+		final_h = int(dest_w / aspect_ratio)
+		final_w = dest_w
+	# print final_w, final_h
+	ret = None
+	try:
+		ret = im.resize((final_w, final_h), Image.ANTIALIAS)
+	except:
+		print "Image resizing error... skip..."
+	return ret
 
 
 def create_thumbnails(instance, name):
