@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -22,13 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 try:
 	from secret_key import *
 except ImportError:
-	SETTINGS_DIR=os.path.abspath(os.path.dirname(__file__))
+	SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
 	from django.utils.crypto import get_random_string
+
 	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 	with open(os.path.join(SETTINGS_DIR, 'secret_key.py'), "w+") as f:
-		s = "SECRET_KEY = '"+get_random_string(50, chars)+"'"
+		s = "SECRET_KEY = '" + get_random_string(50, chars) + "'"
 		f.write(s)
-	from secret_key import * 
+	from secret_key import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,65 +38,55 @@ DEBUG = True
 ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Application definition
-
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'taggit',
-    'booru',
-    'log_in',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'taggit',
+	'booru',
+	'log_in',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'mahBooru.urls'
 
 WSGI_APPLICATION = 'mahBooru.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	}
 }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_PATH = os.path.join(BASE_DIR,'static')
+STATIC_PATH = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
-    STATIC_PATH,
+	STATIC_PATH,
 )
 
 TEMPLATES = [
@@ -120,20 +112,11 @@ TEMPLATES = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 PASSWORD_HASHERS = (
 	'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 )
 
-LOGIN_URL='/login/'
-#LOGIN_URL = '/accounts/login'
-
-# Django registration redux settings
-"""REGISTRATION_OPEN = True
-ACCOUNT_ACTIVATION_DAYS = 7
-REGISTRATION_AUTO_LOGIN = True
-LOGIN_REDIRECT_URL = '/'
-"""
+LOGIN_URL = '/login/'

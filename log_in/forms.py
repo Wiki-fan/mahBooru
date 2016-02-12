@@ -14,7 +14,7 @@ class UserRegisterForm(forms.ModelForm):
 
 class UserProfileRegisterForm(forms.ModelForm):
 	description = forms.CharField(required=False)
-	userpic = forms.ImageField(label="Choose file:")  # TODO: userpic should be optional, not necessary
+	userpic = forms.ImageField(label="Choose file:", required=False)  # TODO: userpic should be optional, not necessary
 
 	class Meta:
 		model = UserProfile

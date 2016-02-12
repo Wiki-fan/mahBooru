@@ -20,7 +20,8 @@ class PictureManager(models.Manager):
 		picture = Picture(rating=rating, src=src, name='', score=score)
 
 		picture.uploaded_by = UserProfile.objects.get(
-				user=UserProfile.objects.get(user__username="admin"))  # TODO: temporary solution.
+			user=UserProfile.objects.get(user=UserProfile.objects.get(user__is_superuser=True))
+		)
 		picture.save()
 
 		save_image(image_data, picture.file_url, str(picture.pk) + '.' + file_extension)

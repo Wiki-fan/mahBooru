@@ -1,6 +1,8 @@
 # Standalone script which should populate database with pictures in DIR directory.
 # Subdirectories are counted as pools (unimplemented yet).
 # Tags and other is taken from Danbooru using IQDB.
+# TODO: other sources.
+# Uploaded_by is first created superuser (normally we should have one of them, so this is not a problem).
 # Usage: python manage.py fill 'path/to/picture/folder'
 
 import os
@@ -92,4 +94,4 @@ class Command(BaseCommand):
 				except requests.exceptions.ConnectionError:
 					print "Connection error... retry..."
 
-		print "All pictures are processed"
+		print "All pictures processed"

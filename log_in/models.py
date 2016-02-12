@@ -12,7 +12,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, primary_key=True)
 	description = models.CharField(max_length=256)
 
-	userpic = MyImageField(storage=userpic_storage, default=None)
+	userpic = MyImageField(storage=userpic_storage, default="DefaultAvatar.png")
 
 	def __unicode__(self):
 		return self.user.username
