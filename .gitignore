@@ -6,4 +6,4 @@ migrations/
 /media/userpics/*
 !media/userpics/DefaultAvatar.png
 secret_key.*
-.idea/
+.idea
