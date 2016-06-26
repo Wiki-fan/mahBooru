@@ -7,6 +7,7 @@ from mahBooru.common.ImageStuff import *
 from mahBooru.common.ImageStuff import create_thumbnails, add_tags, save_image, hash_image
 from mahBooru.common.MyImageField import MyImageField
 from mahBooru.settings import *
+from django.utils.html import format_html
 
 picture_storage = FileSystemStorage(location=MEDIA_ROOT + "/images", base_url=os.path.join(MEDIA_URL, "images/"))
 preview_storage = FileSystemStorage(location=MEDIA_ROOT + "/images/preview",
@@ -72,6 +73,11 @@ class Picture(models.Model):
 	md5 = models.CharField(max_length=32)  # TODO: decide what to do with it.
 
 	objects = PictureManager()
+
+	def thumbnail_tag(self):
+		return format_html('<img src="{}" />', self.thumbnail_url.url)
+	thumbnail_tag.short_description = 'Image preview'
+	#thumbnail_tag.allow_tags = True"""
 
 	def __unicode__(self):
 		return "Picture:" + self.name

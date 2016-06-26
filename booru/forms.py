@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from django import forms
 
@@ -22,7 +22,7 @@ class PictureUploadForm(forms.ModelForm):
 			                            code='no_source')
 		if src != '' and file_url is not None:
 			raise forms.ValidationError('You should specify only one source for the picture', code='two_sources')
-		if src != '' and urllib2.urlopen(src) is None:
+		if src != '' and urllib.request.urlopen(src) is None:
 			raise forms.ValidationError("Can't access %(src)s", params={'src': src},
 			                            code='cant_access')
 

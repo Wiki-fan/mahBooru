@@ -1,4 +1,4 @@
-import StringIO
+import io
 import hashlib
 
 from PIL import Image
@@ -23,7 +23,7 @@ def resize_image(im, dest_size):
 	try:
 		ret = im.resize((final_w, final_h), Image.ANTIALIAS)
 	except:
-		print "Image resizing error... skip..."
+		print ("Image resizing error... skip...")
 	return ret
 
 
@@ -34,7 +34,7 @@ def create_thumbnails(instance, name):
 	thumbnail_size = (150, 150)
 	o_im = resize_image(im, thumbnail_size)
 	o_name = name + '.jpg'
-	o_string = StringIO.StringIO()
+	o_string = io.BytesIO()
 	o_im.save(o_string, "JPEG")
 	instance.thumbnail_url.save(o_name, File(o_string))
 	o_string.close()
@@ -43,7 +43,7 @@ def create_thumbnails(instance, name):
 	preview_size = (1000, 1000)
 	o_im = resize_image(im, preview_size)
 	o_name = name + '.jpg'
-	o_string = StringIO.StringIO()
+	o_string = io.BytesIO()
 	o_im.save(o_string, "JPEG")
 	instance.preview_url.save(o_name, File(o_string))
 	o_string.close()

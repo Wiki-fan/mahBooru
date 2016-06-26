@@ -5,8 +5,12 @@ from .models import Picture, UserProfile
 
 class PictureAdmin(admin.ModelAdmin):
 	list_display = (
-		'id', 'name', 'rating', 'score', 'image_width', 'image_height', 'file_url', 'preview_url', 'thumbnail_url')
-
+		'id', 'name', 'rating', 'score', 'image_width',
+		'image_height', 'file_url', 'preview_url', 'thumbnail_url', 'thumbnail_tag'
+	)
+	list_editable = ('name',)
+	#fields += 'thumbnail_tag'
+	readonly_fields = ('thumbnail_tag',)
 
 admin.site.register(Picture, PictureAdmin)
 admin.site.register(UserProfile)

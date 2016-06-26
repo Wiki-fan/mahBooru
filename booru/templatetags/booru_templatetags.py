@@ -11,18 +11,15 @@ register = template.Library()
 @register.simple_tag
 def query_transform(request, **kwargs):
 	updated = request.GET.copy()
-	for k, v in kwargs.iteritems():
+	for k, v in kwargs.items():
 		updated[k] = v
-	# updated.update(kwargs)
 	return updated.urlencode()
-
 
 @register.simple_tag
 def query_replace(**kwargs):
 	query_dict = QueryDict('', mutable=True)
 	query_dict.update(kwargs)
 	return query_dict.urlencode()
-
 
 @register.inclusion_tag('booru/show_all_tags.html', takes_context=True)
 def show_all_tags(context):

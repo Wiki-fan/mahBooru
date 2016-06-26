@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -30,7 +30,7 @@ def add_picture(request):
 				f, e = os.path.splitext(filename)
 				f = str(instance.pk)
 				filename = f + e
-				save_image(urllib2.urlopen(instance.src).read(), instance.file_url, filename)
+				save_image(urllib.request.urlopen(instance.src).read(), instance.file_url, filename)
 			# instance.file_url.save(instance.file_url.generate_filename(), ContentFile(image_file) )
 			else:
 				# Uploading picture from file
@@ -39,7 +39,7 @@ def add_picture(request):
 				f, e = os.path.splitext(filename)
 				f = str(instance.pk)
 				filename = f + e
-			# print filename, f, e
+			# print (filename, f, e)
 
 			# tags
 			instance.save()
@@ -47,13 +47,13 @@ def add_picture(request):
 
 			# md5 hash
 			instance.md5 = hash_image(instance.file_url)
-			# print instance.md5
+			# print (instance.md5)
 
 			create_thumbnails(instance, f)
 
 			instance.save()
 		else:
-			print form.errors
+			print((form.errors))
 	else:
 		form = PictureUploadForm()
 	context_dict['picture_upload_form'] = form
@@ -65,7 +65,7 @@ def posts(request):
 	context_dict = {}
 	if request.method == 'GET':
 		context_dict['picture'] = Picture.objects.get(id=request.GET['id'])
-	# print Picture.objects.get(id=request.GET['id']).tags.names()
+	# print (Picture.objects.get(id=request.GET['id']).tags.names())
 
 	return render(request, 'booru/picture.html', context_dict)
 
@@ -75,15 +75,15 @@ def index(request):
 
 	if request.method == 'GET':
 		if request.GET.get('tags') is not None:
-			# print request.GET.get('tags')
+			# print (request.GET.get('tags'))
 			query_list = [i for i in request.GET['tags'].split(' ')]
-			# print query_list
+			# print (query_list)
 			picture_list = Picture.objects.all()
 			for i in query_list:
 				if i != '':  # If tag is empty string
 					picture_list = picture_list.filter(tags__name__contains=i).distinct()
 				# picture_list = Picture.objects.filter(tags__name__contains=query_list).distinct()
-				# print picture_list
+				# print (picture_list)
 		else:
 			picture_list = Picture.objects.all()
 		paginator = Paginator(picture_list, 18)

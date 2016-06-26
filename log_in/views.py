@@ -27,7 +27,7 @@ def user_register(request):
 
 			registered = True
 		else:
-			print user_form.errors, user_profile_form.errors
+			print(user_form.errors, user_profile_form.errors)
 	else:
 		# Simply display form
 		user_form = UserRegisterForm()
@@ -53,7 +53,7 @@ def user_login(request):
 			else:
 				return HttpResponse("Your account is disabled")
 		else:
-			print "Invalid login details: {0}, {1}".format(username, password)
+			print("Invalid login details: {0}, {1}".format(username, password))
 			return HttpResponse("Invalid login details supplied.")
 	else:
 		return render(request, "log_in/user_login.html", context_dict)

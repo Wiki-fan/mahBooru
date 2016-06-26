@@ -21,16 +21,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Generate a new secret key every installation as described here:
 # http://stackoverflow.com/questions/4664724/distributing-django-projects-with-unique-secret-keys
 try:
-	from secret_key import *
+	from .secret_key import *
 except ImportError:
 	SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
 	from django.utils.crypto import get_random_string
 
 	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-	with open(os.path.join(SETTINGS_DIR, 'secret_key.py'), "w+") as f:
+	with open('secret_key.py', "w+") as f:
 		s = "SECRET_KEY = '" + get_random_string(50, chars) + "'"
 		f.write(s)
-	from secret_key import *
+	from .secret_key import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
