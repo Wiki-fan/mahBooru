@@ -17,16 +17,20 @@ thumbnail_storage = FileSystemStorage(location=MEDIA_ROOT + "/images/thumbnail",
 
 
 class PictureManager(models.Manager):
-	def create_picture(self, rating, src, score, tag_string, image_data, file_extension):
+	def create_picture(self, rating, src, score, tag_string, image_data, file_extension, artist='', character='',
+	                   copyright=''):
 		picture = Picture(rating=rating, src=src, name='', score=score)
 
 		picture.uploaded_by = UserProfile.objects.get(
-			user=UserProfile.objects.get(user=UserProfile.objects.get(user__is_superuser=True))
+			user=UserProfile.objects.get(user=UserProfile.objects.get(user__is_superuser=True)),
 		)
+		picture.tag_string_artist = artist,
+		picture.tag_string_character = character,
+		picture.tag_string_copyright = copyright
 		picture.save()
 
 		save_image(image_data, picture.file_url, str(picture.pk) + '.' + file_extension)
-		create_thumbnails(picture, '.' + picture.file_url.name.split('.')[-1])
+		create_thumbnails(picture, '.' + picture.file_url.name.split('.')[-1], file_extension)
 		add_tags(picture, tag_string)
 		picture.md5 = hash_image(picture.file_url)
 		picture.save()
@@ -35,7 +39,7 @@ class PictureManager(models.Manager):
 
 class Picture(models.Model):
 	# Picture name
-	name = models.CharField(max_length=256)
+	name = models.CharField(max_length=256, default='')
 	# Source URL (if presented)
 	src = models.URLField(default='')
 	# Initial picture size
@@ -63,8 +67,12 @@ class Picture(models.Model):
 	rating = models.CharField(max_length=1, choices=RATING_CHOICES)
 	# Score
 	score = models.IntegerField(default=0)
-	# Artist TODO: should we have artist as a new field, or just tag?
-	# artist = models.CharField(max_length=256)
+	# Artist
+	tag_string_artist = models.CharField(max_length=256, default='')
+	# Character
+	tag_string_character = models.CharField(max_length=256, default='')
+	# Copyright
+	tag_string_copyright = models.CharField(max_length=256, default='')
 	# Uploader
 	uploaded_by = models.ForeignKey(UserProfile)
 	# Upload date and time
@@ -76,8 +84,10 @@ class Picture(models.Model):
 
 	def thumbnail_tag(self):
 		return format_html('<img src="{}" />', self.thumbnail_url.url)
+
 	thumbnail_tag.short_description = 'Image preview'
-	#thumbnail_tag.allow_tags = True"""
+
+	# thumbnail_tag.allow_tags = True"""
 
 	def __unicode__(self):
 		return "Picture:" + self.name

@@ -14,23 +14,25 @@ from django.core.management.base import BaseCommand
 
 from booru.models import Picture
 
+def save_as_not_founded(image_file_name):
+	image_file = open(image_file_name, 'rb')
+	pic = Picture.objects.create_picture(
+		src='',
+		rating='s',
+		score=0,
+		tag_string='not_founded',
+		image_data=image_file.read(),
+		file_extension=image_file_name.split('.')[-1]
+	)
+	image_file.close()
+
 def get_from_url(url, count,):
 	if url == '':
 		print("Picture wasn't found")
-		image_file = open(f, 'rb')
-		pic = Picture.objects.create_picture(
-			src='',
-			rating='s',
-			score=0,
-			tag_string='not_founded',
-			image_data=image_file.read(),
-			file_extension=f.split('.')[-1]
-		)
-		image_file.close()
+		save_as_not_founded(f)
 		return
 	else:
 		count += 1
-
 	if url.startswith(r'//'):
 		url = 'http:' + url
 	elif not url.startswith('http'):
@@ -38,9 +40,12 @@ def get_from_url(url, count,):
 
 	if url.startswith("http://danbooru.donmai.us/"):
 		xml_url = url + '.xml'
-		print(xml_url)
+		print('Founded at "%s"'%xml_url)
 		soup = BeautifulSoup(requests.get(xml_url).text, 'xml')
 		post = soup.post
+		if post.find('is-banned').text == 'true':
+			print('Post was banned')
+			return False
 		tag_string = post.find('tag-string').text
 		large_file_url = post.find('large-file-url').text
 		picture_url = "http://danbooru.donmai.us" + large_file_url
@@ -51,7 +56,10 @@ def get_from_url(url, count,):
 			score=post.score.text,
 			tag_string=tag_string,
 			image_data=urllib.request.urlopen(picture_url).read(),
-			file_extension=picture_url.split('.')[-1]
+			file_extension=picture_url.split('.')[-1],
+			artist=post.find('tag-string-artist').text,
+			character=post.find('tag-string-character').text,
+			copyright=post.find('tag-string-copyright').text
 		)
 		return True
 	elif url.startswith("http://-yande.re/") or url.startswith("-http://konachan.com/"):
@@ -92,10 +100,15 @@ class Command(BaseCommand):
 		os.chdir(DIR)
 		count = 0
 		for f in os.listdir('./'):
-			if f.endswith('.gif') or f.endswith('.jpg') or f.endswith('.jpeg') or f.endswith('.png'):
+			print('Looking at file "%s"' % f)
+			if f.lower().endswith('.gif'):
+				print('Gif founded')
+				save_as_not_founded(f)
+			elif f.lower().endswith('.webm'):
+				print('Webm founded. Skipping.')
+			elif f.lower().endswith('.jpg') or f.lower().endswith('.jpeg') or f.lower().endswith('.png'):
 				while True:
 					try:
-						print("getting file"+f)
 						image_file = open(f, 'rb')
 						r = requests.post("http://iqdb.org/", files={'file': image_file}, data={"submit": True})#, proxies=proxies)
 						image_file.close()
@@ -107,6 +120,8 @@ class Command(BaseCommand):
 						url = ''
 						for i in lst:
 							# Searching picture with maximum similarity. If similarity lesser than MIN_SIMILARITY, skip.
+							if i is None or i.parent is None or i.parent.next_sibling is None or i.parent.next_sibling.next_sibling is None:
+								continue
 							similarity_string = i.parent.next_sibling.next_sibling.next_sibling
 							similarity = -1
 							if similarity_string is not None:
@@ -126,5 +141,8 @@ class Command(BaseCommand):
 
 					except requests.exceptions.ConnectionError:
 						print("Connection error... retry...")
+				continue
+			else:
+				print('Unknown format')
 
 		print("All pictures processed")

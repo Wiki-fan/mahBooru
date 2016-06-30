@@ -27,7 +27,7 @@ def resize_image(im, dest_size):
 	return ret
 
 
-def create_thumbnails(instance, name):
+def create_thumbnails(instance, name, file_extension):
 	im = Image.open(instance.file_url.path)
 
 	# thumbnail
@@ -35,7 +35,7 @@ def create_thumbnails(instance, name):
 	o_im = resize_image(im, thumbnail_size)
 	o_name = name + '.jpg'
 	o_string = io.BytesIO()
-	o_im.save(o_string, "JPEG")
+	o_im.convert('RGB').save(o_string, "JPEG")
 	instance.thumbnail_url.save(o_name, File(o_string))
 	o_string.close()
 
@@ -44,7 +44,7 @@ def create_thumbnails(instance, name):
 	o_im = resize_image(im, preview_size)
 	o_name = name + '.jpg'
 	o_string = io.BytesIO()
-	o_im.save(o_string, "JPEG")
+	o_im.convert('RGB').save(o_string, "JPEG")
 	instance.preview_url.save(o_name, File(o_string))
 	o_string.close()
 
